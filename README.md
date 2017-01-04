@@ -12,3 +12,5 @@ Database : BIGSQL
 Port : 32051
 user name : bigsql
 password : your bigsql password
+
+  3.  Once your configuration is complete, you can peruse the avaible sql scripts.  
