@@ -7,10 +7,10 @@ Requirements -
   2.  Download and install of a 3rd party SQL client (recommend DBeaver)
 
     Once dbeaver is downloaded and setup, just create a DB2 connection, and enter this data in 
-      a. Host : your bigsql head node hostname or IP
-      b. Database : BIGSQL
-      c. Port : 32051
-      d. user name : bigsql
-      e. password : your bigsql password
+      1. Host : your bigsql head node hostname or IP
+      2. Database : BIGSQL
+      3. Port : 32051
+      4. user name : bigsql
+      5. password : your bigsql password
 
   3.  Once your configuration is complete, you can peruse the avaible sql scripts.  
