@@ -16,8 +16,11 @@ dash111207
 Password:
 6d6d27bd659e
 
+DROP WRAPPER drda;
+DROP SERVER dashremote;
 
 CREATE WRAPPER drda;
+
 CREATE SERVER dashremote 
   TYPE DB2/UDB
   VERSION 11.1

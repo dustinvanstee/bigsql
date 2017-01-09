@@ -1,10 +1,34 @@
---test
-CREATE SCHEMA PRG
+-- Security Demo Script showing Row based filtering and column masking
+--   Prereq : userids mngr1 and staff1 should be on the OS prior to running this script
+--   Example
+--     In OS add users ... (can be done using LDAP as well)
+--		useradd -u 3000 mngr1
+--		useradd -u 3001 staff1
+--		useradd -u 3002 staff2
+--		useradd -u 3003 staff3
+--		echo passw0rd | passwd mngr1 --stdin
+--		echo passw0rd | passwd staff1 --stdin
+--		echo passw0rd | passwd staff2 --stdin
+--		echo passw0rd | passwd staff3 --stdin
+
+-- Now, 3 connections should be setup
+-- 1. bigsql admin connections
+-- 2. mngr1 connection
+-- 3. staff1 connection
+
+
+-- MAC hints ...
 -- Hit F5 TO refresh SCHEMA!
 -- CNTL + ENTER runs a line
+-- Option  + x  runs a batch of lines
+
+-- *** START BIGSQL CMDS ****
+-- Setup - use bigsql admin connection for the following command
+CREATE SCHEMA IF NOT EXISTS PRG
 
 DROP TABLE PRG.CREDITCARD
 
+-- Create a credit card table for the demo
 CREATE HADOOP TABLE IF NOT EXISTS PRG.CREDITCARD
 (CCARD_ID INT,
 SSN VARCHAR(11),
@@ -35,36 +59,22 @@ INSERT INTO PRG.CREDITCARD VALUES (17,'224-34-3956','AMEX','3339111122223393',12
 INSERT INTO PRG.CREDITCARD VALUES (18,'927-65-4321','DISC','7777111122223333',12,2018);
 
 
-
-
--- In OS add users ... (can be done using LDAP as well)
---useradd -u 3000 mngr1
---useradd -u 3001 staff1
---useradd -u 3002 staff2
---useradd -u 3003 staff3
---echo passw0rd | passwd staff3 --stdin
-
 SELECT * FROM PRG.CREDITCARD
 
-
+-- Create roles that we will use for mapping userids -> roles -> tables
 -- Roles are analogous to groups ....
 CREATE ROLE MANAGER_ROLE;
 CREATE ROLE STAFF_ROLE;
 
-
 -- Create table permissions for roles
 GRANT SELECT ON PRG.CREDITCARD TO ROLE MANAGER_ROLE;
-GRANT SELECT ON PRG.CREDITCARD TO ROLE STAFF_ROLE;
-GRANT SELECT ON PRG.CREDITCARD TO ROLE STAFF_ROLE;
 GRANT SELECT ON PRG.CREDITCARD TO ROLE STAFF_ROLE;
 
 -- Assign users to roles ...
 GRANT ROLE MANAGER_ROLE TO USER mngr1;
-
 GRANT ROLE STAFF_ROLE TO USER staff1;
 GRANT ROLE STAFF_ROLE TO USER staff2;
 GRANT ROLE STAFF_ROLE TO USER staff3;
-
 
 -- Column Masking Example
 -- Managers can see SSN, Staff can see last 4 digits
@@ -86,12 +96,13 @@ CREATE MASK CN_MASK ON PRG.CREDITCARD
     END 
 ENABLE; 
 
-
+-- Important! this line is required for the settings to take effect
 ALTER TABLE PRG.CREDITCARD ACTIVATE COLUMN ACCESS CONTROL;
+-- *** END BIGSQL CMDS ****
 
--- Test .....
+
+-- Now Test .....
 -- Connect as Manager 
-
 SELECT * FROM PRG.CREDITCARD
 
 -- Connect as Staff
@@ -99,9 +110,8 @@ SELECT * FROM PRG.CREDITCARD
 
 
 
--- Row Based access control
 
-
+-- *** START BIGSQL CMDS ****
 -- Row based Access Control
 -- Allow Manager to see all rows ...
 
@@ -120,7 +130,13 @@ FOR ROWS WHERE
 )
 ENFORCED FOR ALL ACCESS ENABLE;
 ALTER TABLE PRG.CREDITCARD ACTIVATE ROW ACCESS CONTROL;
+-- *** END BIGSQL CMDS ****
 
+-- Now Test .....
+-- Connect as Manager 
+SELECT * FROM PRG.CREDITCARD ORDER BY CCARD_ID ASC
+
+-- Connect as Staff
 SELECT * FROM PRG.CREDITCARD ORDER BY CCARD_ID ASC
 
 
