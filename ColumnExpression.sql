@@ -1,6 +1,13 @@
+-- MAC hints ...
+-- Hit F5 TO refresh SCHEMA!
+-- CNTL + ENTER runs a line
+-- Highlight code, then Option  + x  runs a batch of lines
+
 
 use amplab;
+
 drop table amplab.USERVISITS_COL_EXP;
+
 CREATE HADOOP TABLE USERVISITS_COL_EXP (
     sourceIP varchar(16),
     destURL varchar(100),
@@ -12,8 +19,7 @@ CREATE HADOOP TABLE USERVISITS_COL_EXP (
     searchWord varchar(32),
     duration integer)
     STORED AS TEXTFILE
-    PARTITIONED BY 
-      (year(visitDate) AS tmpdate )
+ )
     ;
   --    YEAR(visitDate) AS YEAR_PART,
   --    MONTH(visitDate) AS MONTH_PART

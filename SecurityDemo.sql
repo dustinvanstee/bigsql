@@ -16,7 +16,6 @@
 -- 2. mngr1 connection
 -- 3. staff1 connection
 
-
 -- MAC hints ...
 -- Hit F5 TO refresh SCHEMA!
 -- CNTL + ENTER runs a line
@@ -60,6 +59,7 @@ INSERT INTO PRG.CREDITCARD VALUES (18,'927-65-4321','DISC','7777111122223333',12
 
 
 SELECT * FROM PRG.CREDITCARD
+GRANT SELECT ON PRG.CREDITCARD TO USER useribm;
 
 -- Create roles that we will use for mapping userids -> roles -> tables
 -- Roles are analogous to groups ....

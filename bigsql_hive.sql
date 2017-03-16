@@ -21,5 +21,14 @@ SELECT * FROM PRG.test;
 
 
 -- hive
-show databases;
+show table;
 SELECT * FROM PRG.test;
+select * from lendingclubintrateavg limit 10;
+
+CREATE TABLE IF NOT EXISTS test ( col1 String, col2 String)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+GRANT DBADM ON DATABASE TO USER PNCUSER;
